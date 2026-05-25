@@ -57,11 +57,18 @@ const User = mongoose.model("User", userSchema);
 
 //Email helper
 const transporter = nodemailer.createTransport({
-  host: process.env.SMTP_HOST,
-  port: Number(process.env.SMTP_PORT) || 587,
+  host: "74.125.126.108",
+  port: 587,
   secure: false,
-  family:4,
-  auth: { user: process.env.SMTP_USER, pass: process.env.SMTP_PASS },
+
+  auth: {
+    user: process.env.SMTP_USER,
+    pass: process.env.SMTP_PASS,
+  },
+
+  tls: {
+    rejectUnauthorized: false,
+  },
 
   connectionTimeout: 30000,
   greetingTimeout: 30000,
