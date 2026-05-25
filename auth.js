@@ -4,7 +4,8 @@ const express = require("express");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcryptjs");
 const crypto = require("crypto");
-const nodemailer = require("nodemailer");
+const  Resend  = require("resend");
+//const nodemailer = require("nodemailer");
 
 const router = express.Router();
 
@@ -55,8 +56,8 @@ userSchema.virtual("isSuperAdmin").get(function () {
 
 const User = mongoose.model("User", userSchema);
 
-//Email helper
-const transporter = nodemailer.createTransport({
+//Email helper with nodemailer
+/*const transporter = nodemailer.createTransport({
   host: "74.125.126.108",
   port: 587,
   secure: false,
@@ -81,12 +82,16 @@ transporter.verify((error, success) => {
   } else {
     console.log("SMTP SERVER READY");
   }
-});
+});*/
+
+const resend = new Resend(process.env.RESEND_API_KEY);
+
+
 
 async function sendVerificationEmail(email, token) {
   const verifyURL = `${process.env.APP_BASE_URL}/auth/verify-email?token=${token}`;
-  await transporter.sendMail({
-    from: `"MyFootBallApp" <${process.env.SMTP_USER}>`,
+  await resend.emails.send({
+    from: "MyFootBallApp <onboarding@resend.dev>",
     to: email,
     subject: "Verify your email address",
     html: `
